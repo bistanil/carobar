@@ -1,14 +1,40 @@
 import React, { Component } from 'react';
-import Routes from './Routes/Routes';
+import { Router } from 'react-router-dom';
+import { createBrowserHistory } from 'history';
+import { Chart } from 'react-chartjs-2';
+import { ThemeProvider } from '@material-ui/styles';
+import validate from 'validate.js';
 
-class App extends Component {
+import { chartjs } from './helpers';
+import theme from './theme';
+import 'react-perfect-scrollbar/dist/css/styles.css';
+import './assets/scss/index.scss';
+import validators from './common/validators';
+import Routes from './Routes';
+import axios from 'axios'
+
+const browserHistory = createBrowserHistory();
+
+Chart.helpers.extend(Chart.elements.Rectangle.prototype, {
+  draw: chartjs.draw
+});
+
+validate.validators = {
+  ...validate.validators,
+  ...validators
+};
+
+axios.defaults.baseURL = 'http://localhost:5000'
+
+export default class App extends Component {
+
   render() {
     return (
-      <div className="App">
-        <Routes />
-      </div>
+      <ThemeProvider theme={theme}>
+        <Router history={browserHistory}>
+          <Routes />
+        </Router>
+      </ThemeProvider>
     );
   }
 }
-
-export default App;
