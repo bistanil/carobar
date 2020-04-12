@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const validator = require("validator").default;
 
 const carSchema = new mongoose.Schema(
   {
@@ -11,14 +12,24 @@ const carSchema = new mongoose.Schema(
     },
     userId: {
       type: String,
-      required: [true, "Use id is required"],
+      required: [true, "User id is required"],
       trim: true,
+    },
+    chassisNo: {
+      type: String,
+      required: [true, "Chassis No is required"],
+      trim: true,
+      minlength: 3,
+      maxlength: 60,
     },
     amount: {
       type: Number,
-      required: [true, "Amount is required"],
+      required: [true, "Amount>=0 is required"],
       maxlength: 60,
       trim: true,
+      validate: (value) => {
+        return value>=0;
+      }
     },
     image: {
       type: String,

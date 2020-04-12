@@ -6,9 +6,13 @@ function reducer(state = {cars:[]}, action){
     case 'addCar':
       return {
         ...state,
-        cars: [...state.cars, action.payload]
+        cars: state.cars.concat(action.payload)
       }
-
+    case 'setCars':
+      return {
+        ...state,
+        cars: [...state.cars,...action.payload]
+      }
     default:
       return state;
   }

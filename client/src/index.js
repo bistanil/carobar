@@ -35,7 +35,20 @@ axios.defaults.baseURL = 'http://localhost:5000'
 axios.interceptors.request.use(function (config) {
   const token = store.getState().login.token;
   config.headers.Authorization =  token;
+  // if (401 === error.response.status) {
+
+  // }
   return config;
+});
+
+axios.interceptors.response.use(function (response) {
+  return response;
+}, function (error) {
+  if (403 === error.response.status) {
+    store.dispatch({type:'logout'})
+  } else {
+    return Promise.reject(error);
+  }
 });
 
 ReactDOM.render(

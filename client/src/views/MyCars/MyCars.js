@@ -30,7 +30,7 @@ import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
 
 
-// import MUIDataTable from 'mui-datatables';
+import CarsTable from './components/CarsTable'
 
 const schema = {
   carName: {
@@ -112,12 +112,32 @@ const MyCars = props => {
     }));
   }, [formState.values, image]);
 
+  useEffect(()=>{
+    let signal = axios.CancelToken.source();
+    const loadCars= async () => {
+      try {
+        let response =await axios.get(`/api/cars/${state.user.id}`,{
+          cancelToken: signal.token,
+        }
+        );
+        console.log(response.data);
+        dispatch({type: 'setCars', payload: response.data.cars})
+      }catch(err){
+        console.log('Error: ', err); 
+      }
+    };
+    if(state.user )
+      loadCars();
+    return function cleanup(){
+      signal.cancel('Api is being canceled');
+    }
+  },[])
+
   useEffect(() => {
     let signal = axios.CancelToken.source();
     const doUpload= async () => {
       try {
         let formData = new FormData();
-        // formData.append('file', formState.values.image);
         Object.keys(formState.values).filter(key=>key!=='image').forEach(key=>{
           formData.set(key, formState.values[key]);
         })
@@ -133,10 +153,8 @@ const MyCars = props => {
           }
         }
         );
-        if(response){
-          console.log(response.data);
-          dispatch({type: 'addCar', payload: response.data.car})
-        }
+        console.log(response.data);
+        dispatch({type: 'addCar', payload: response.data.car})
         setIsSubmitting(false);
         handleClose();
       }catch(err){
@@ -154,7 +172,7 @@ const MyCars = props => {
     return function cleanup(){
       signal.cancel('Api is being canceled');
     }
-  }, [isSubmitting, formState.values])
+  }, [isSubmitting, formState.values, dispatch])
 
   const handleClickOpen = (scrollType) => {
     setOpen(true);
@@ -366,6 +384,7 @@ Select the image to upload from the Image Chooser below and fill in the details.
       >
             Add Car
       </Button>
+      <CarsTable tableData={cars.cars}/>
     </div>
   );
 };

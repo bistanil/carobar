@@ -6,7 +6,7 @@ var fs = require('fs');
 var multer = require("multer");
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "uploads/");
+    cb(null, "client/public/uploads/");
   },
   filename: function (req, file, cb) {
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
@@ -21,16 +21,19 @@ router.all("*", verifyJWT_MW);
 // User model
 const Cars = require("../models/cars");
 
-// @route   GET /api/users/:id
+// @route   GET /api/cars/:id
 // @desc    Get a specific user
 // @access  Public
 router.get("/:id", async (req, res) => {
-  try {
-    const user = await Users.findById(req.params.id);
-    res.send({ user });
-  } catch (err) {
-    res.status(404).send({ message: "User not found!" });
-  }
+  console.log(req.params)
+  Cars.find({userId: req.params.id})
+  .then((cars)=>{
+    res.status(200).send({ cars });
+  })
+  .catch((err)=>{
+    res.status(404).send({ message: "No Cars found!" });
+  })
+  
 });
 
 router.post("/add", (req, res) => {
@@ -55,6 +58,7 @@ router.post("/add", (req, res) => {
       } else {
         const newCar = new Cars({
           carName: req.body.carName,
+          chassisNo: req.body.chassisNo,
           userId: req.body.userId,
           amount: req.body.amount,
           image: req.file.filename,
@@ -70,13 +74,11 @@ router.post("/add", (req, res) => {
           })
           .catch((err) => {
             fs.unlinkSync(req.file.path)
-            res.json({ error: err })
+            res.status(500).json({ error: err })
           });
       }
-      // res.status(200).json({message:"Some Error Occurred"})
     }
   });
-  // res.status(200).json({message:"Got Some Erros"})
 });
 
 module.exports = router;

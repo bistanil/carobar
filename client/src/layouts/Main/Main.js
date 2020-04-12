@@ -40,7 +40,7 @@ const Main = props => {
   useEffect(()=>{
     let token = localStorage.getItem('_carobar_');
     // console.log('Main',state);
-    if(!state.loggedIn || !token){
+    if(!state.loggedIn){
       history.push('/sign-in')
     }
   },[state])
