@@ -85,8 +85,10 @@ const Transition = forwardRef(function Transition(props, ref) {
 const MyCars = props => {
   const { className, ...rest } = props;
   const [scroll, setScroll] = useState('paper');
-  const [image, setImage] = useState('');
+  const [image] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [toDelete, setToDelete] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
   const state = useSelector(state=>state.login);
   const cars = useSelector(state=>state.cars);
   const dispatch = useDispatch();
@@ -120,10 +122,9 @@ const MyCars = props => {
           cancelToken: signal.token,
         }
         );
-        console.log(response.data);
         dispatch({type: 'setCars', payload: response.data.cars})
       }catch(err){
-        console.log('Error: ', err); 
+        // console.log('Error: ', err); 
       }
     };
     if(state.user )
@@ -132,6 +133,31 @@ const MyCars = props => {
       signal.cancel('Api is being canceled');
     }
   },[])
+
+  useEffect(()=>{
+    let signal = axios.CancelToken.source();
+    const removeCar= async () => {
+      try {
+        let response =await axios.delete(`/api/cars/${state.user.id}/${toDelete}`,{
+          cancelToken: signal.token,
+        }
+        );
+        dispatch({type: 'removeCar', payload: response.data.cars['_id']})
+        setIsDeleting(false)
+        setToDelete(null)
+      }catch(err){
+        setIsDeleting(false)
+        setToDelete(null)
+      }
+    };
+    if(toDelete){
+      setIsDeleting(true);
+      removeCar();
+    }
+    return function cleanup(){
+      signal.cancel('Api is being canceled');
+    }
+  },[toDelete])
 
   useEffect(() => {
     let signal = axios.CancelToken.source();
@@ -143,9 +169,6 @@ const MyCars = props => {
         })
         formData.append('image', formState.values.image);
         formData.append('userId', state.user.id);
-        for (var key of formData.entries()) {
-          console.log(key[0] + ', ' + key[1]);
-        }
         let response =await axios.post('/api/cars/add', formData,{
           cancelToken: signal.token,
           headers:{
@@ -153,16 +176,15 @@ const MyCars = props => {
           }
         }
         );
-        console.log(response.data);
         dispatch({type: 'addCar', payload: response.data.car})
         setIsSubmitting(false);
         handleClose();
       }catch(err){
         // if(err.code)
         if (axios.isCancel(err)) {
-          console.log('Error: ', err); // => prints: Api is being canceled
+          // console.debug('Error: ', err);
         } else {
-          console.log('Error: ', err); 
+          // console.debug('Error: ', err); 
         }
         setIsSubmitting(false);
       }
@@ -200,7 +222,7 @@ const MyCars = props => {
 
   const handleSave=(files)=> {
     //Saving files to state for further use and closing Modal.
-    console.log('Save', files);
+    // console.log('Save', files);
     setFormState(formState => ({
       ...formState,
       values: {
@@ -218,7 +240,6 @@ const MyCars = props => {
     
     if(formState.isValid){
       setIsSubmitting(true);
-      // console.log('File', formData.get('file'));
     }
   }
 
@@ -384,7 +405,11 @@ Select the image to upload from the Image Chooser below and fill in the details.
       >
             Add Car
       </Button>
-      <CarsTable tableData={cars.cars}/>
+      <CarsTable
+        isDeleting={isDeleting}
+        setToDelete={setToDelete}
+        tableData={cars.cars}
+      />
     </div>
   );
 };

@@ -157,7 +157,7 @@ const SignIn = props => {
     // console.log(state);
     if(state.loggedIn || token){
       dispatch({ type: 'localState' , payload: {token, user:jwt_decode(token)}});
-      history.push('/dashboard')
+      history.push('/dashboard');      
     }
   },[])
 

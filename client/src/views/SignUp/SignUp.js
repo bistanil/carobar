@@ -192,7 +192,7 @@ const SignUp = props => {
     console.log('SignUp', state);
     if(state.loggedIn || token){
       dispatch({ type: 'localState' , payload: {token, user:jwt_decode(token)}});
-      history.push('/dashboard');
+      history.push('/dashboard')
     }
   },[])
 

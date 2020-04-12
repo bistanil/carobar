@@ -42,9 +42,12 @@ axios.interceptors.request.use(function (config) {
 });
 
 axios.interceptors.response.use(function (response) {
+  console.log('Response', response);
   return response;
 }, function (error) {
+  console.log('Error', error.response);
   if (403 === error.response.status) {
+    localStorage.removeItem('_carobar_');
     store.dispatch({type:'logout'})
   } else {
     return Promise.reject(error);

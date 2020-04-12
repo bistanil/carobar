@@ -11,7 +11,12 @@ function reducer(state = {cars:[]}, action){
     case 'setCars':
       return {
         ...state,
-        cars: [...state.cars,...action.payload]
+        cars: action.payload
+      }
+    case 'removeCar':
+      return {
+        ...state,
+        cars: state.cars.filter(car=>car['_id']!==action.payload)
       }
     default:
       return state;

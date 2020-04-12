@@ -24,6 +24,22 @@ const Cars = require("../models/cars");
 // @route   GET /api/cars/:id
 // @desc    Get a specific user
 // @access  Public
+router.delete("/:id/:carId", async (req, res) => {
+  console.log(req.params)
+  Cars.findOneAndDelete({userId: req.params.id, _id: req.params.carId})
+  .then((cars)=>{
+    fs.unlinkSync(`client\\public\\uploads\\${cars.image}`);
+    res.status(200).send({ cars });
+  })
+  .catch((err)=>{
+    res.status(404).send({ message: "Car with that Id coul not be found!" });
+  })
+  
+});
+
+// @route   GET /api/cars/:id
+// @desc    Get a specific user
+// @access  Public
 router.get("/:id", async (req, res) => {
   console.log(req.params)
   Cars.find({userId: req.params.id})

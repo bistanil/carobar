@@ -1,4 +1,8 @@
-function reducer(state = {}, action){
+function reducer(state = {
+  loggedIn: false,
+  token:null,
+  user:{}
+}, action){
   // console.log('Action', action.type);
   // console.log('Payload', action.payload);
   switch (action.type) {
@@ -18,7 +22,6 @@ function reducer(state = {}, action){
       }
     case 'logout':
       return {
-        ...state,
         loggedIn: false,
         token: null,
         user: {}

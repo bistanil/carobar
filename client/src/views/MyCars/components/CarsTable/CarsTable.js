@@ -4,7 +4,8 @@ import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import {
   Card,
-  CardMedia
+  CardMedia,
+  Button
 } from '@material-ui/core';
 
 import MUIDataTable from 'mui-datatables';
@@ -33,9 +34,17 @@ const useStyles = makeStyles(theme => ({
     height: 0,
     paddingTop: '56.25%', // 16:9
   },
+  MUIDataTableHeadCell: {
+    root: {
+      '&:nth-child(0)': {
+        width: '30%'
+      }
+    }
+  }
 }));
 
 const CarsTable = props => {
+  const { className, tableData, setToDelete, isDeleting, ...rest } = props;  
   const columns = [
     {
       name:'image',
@@ -46,6 +55,7 @@ const CarsTable = props => {
             <CardMedia
               className={classes.media}
               image={`/uploads/${value}`}
+              style={{width:'250px'}}
               title="Car Image"
             />
           );
@@ -75,7 +85,27 @@ const CarsTable = props => {
         filter: true,
         sort: true,
       }
-    }
+    },
+    {
+      name:'_id',
+      label:'Actions',
+      options: {
+        filter: true,
+        customBodyRender: (value, tableMeta, updateValue) => {
+          return (
+            <Button
+              color="primary"
+              disabled={isDeleting}
+              onClick={()=>{setToDelete(value)}}
+              type="button"
+              variant="contained"
+            >
+            Remove Car
+            </Button>
+          );
+        }
+      }
+    },
   ];
   const options = {
     selectableRows: 'none',
@@ -92,7 +122,6 @@ const CarsTable = props => {
       displayRows: 'of',
     },
   };
-  const { className, tableData, ...rest } = props;  
 
   const classes = useStyles();
 
@@ -115,6 +144,8 @@ const CarsTable = props => {
 
 CarsTable.propTypes = {
   className: PropTypes.string,
+  isDeleting: PropTypes.bool,
+  setToDelete: PropTypes.func,
   tableData: PropTypes.array.isRequired,
 };
 
