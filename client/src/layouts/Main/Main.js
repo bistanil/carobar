@@ -27,7 +27,7 @@ const useStyles = makeStyles(theme => ({
 
 const Main = props => {
   const { children, history } = props;
-  let state = useSelector(state=>state);
+  let state = useSelector(state=>state.login);
   // let location = useLocation();
   const classes = useStyles();
   const theme = useTheme();
@@ -39,7 +39,7 @@ const Main = props => {
 
   useEffect(()=>{
     let token = localStorage.getItem('_carobar_');
-    // console.log('Location',location.pathname);
+    // console.log('Main',state);
     if(!state.loggedIn || !token){
       history.push('/sign-in')
     }

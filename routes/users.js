@@ -1,8 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const secretKey = require("../config.json").secretKey;
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
+const { createJWToken } = require('../auth/auth')
+const bodyParser = require("body-parser");
 
 // User model
 const Users = require("../models/users");
@@ -10,6 +9,8 @@ const Users = require("../models/users");
 // @route   GET /api/users/
 // @desc    Get all users
 // @access  Public
+router.use(bodyParser.urlencoded({ extended: false }));
+router.use(bodyParser.json());
 router.get("/", async (req, res) => {
   try {
     const users = await Users.find({});
@@ -38,48 +39,35 @@ router.post("/login", async (req, res) => {
   console.log(req.body);
   const email = req.body.email;
   const password = req.body.password;
-  Users.findOne({ email }).then((user) => {
-    // console.log(newUser);
-    if (!user) {
-      return res.status(404).json({ emailnotfound: "Email not found" });
-    }
-    // Check password
-    user.comparePassword(password, function (err, isMatch) {
-      console.log(err, isMatch);
-      if (err) return err;
-      console.log(password, isMatch); // -&gt; Password123: true
-      if (isMatch) {
-        // User matched
-        // Create JWT Payload
-        const payload = {
-          id: user["_id"],
-          first_name: user["first_name"],
-          last_name: user["last_name"],
-          email: user["email"],
-          phone: user["phone"],
-          user_type: user["user_type"],
-        };
-        // Sign token
-        jwt.sign(
-          payload,
-          secretKey,
-          {
-            expiresIn: 31556926, // 1 year in seconds
-          },
-          (err, token) => {
-            res.json({
-              success: true,
-              token: "Bearer " + token,
-            });
-          }
-        );
-      } else {
-        return res
-          .status(400)
-          .json({ passwordincorrect: "Password incorrect" });
-      }
-    });
-  });
+  Users.findOne({email})
+  .then((user) => (!user) ? Promise.reject("User with that email coult not be found.") : user)
+  .then((user) => !user.comparePassword(password)?Promise.reject("Password incorrect"): user)  
+  .then((user) =>
+  {
+    const payload = {
+              id: user["_id"],
+              first_name: user["first_name"],
+              last_name: user["last_name"],
+              email: user["email"],
+              phone: user["phone"],
+              user_type: user["user_type"],
+            };
+    res.status(200)
+      .json({
+        success: true,
+        token: createJWToken({
+            sessionData: payload,
+            maxAge: 3600
+          })
+      })
+  })
+  .catch((err) =>
+  {
+    res.status(401)
+      .json({
+        message: err || "Validation failed. Given email and password aren't matching."
+      })
+  })
 });
 
 // @route   POST /api/users/register
@@ -112,20 +100,14 @@ router.post("/register", async (req, res) => {
             user_type: user["user_type"],
           };
 
-          jwt.sign(
-            payload,
-            secretKey,
-            {
-              expiresIn: 31556926, // 1 year in seconds
-            },
-            (err, token) => {
-              return res.json({
-                success: true,
-                token: "Bearer " + token,
-              });
-            }
-          );
-          // return res.json(payload)
+          res.status(200)
+          .json({
+            success: true,
+            token: createJWToken({
+            sessionData: payload,
+            maxAge: 3600
+          })
+        })
         })
         .catch((err) => res.json({ error: err }));
     }

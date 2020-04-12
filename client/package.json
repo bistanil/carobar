@@ -37,6 +37,7 @@
     "eslint": "^6.8.0",
     "history": "^4.9.0",
     "jwt-decode": "^2.2.0",
+    "material-ui-dropzone": "^2.4.9",
     "moment": "^2.24.0",
     "mui-datatables": "^2.14.0",
     "node-sass": "^4.13.1",

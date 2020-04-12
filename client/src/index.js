@@ -3,14 +3,40 @@ import ReactDOM from 'react-dom';
 
 import * as serviceWorker from './serviceWorker';
 import App from './App';
-import { createStore } from 'redux';
+import { createStore, combineReducers } from 'redux';
 import LoginReducer from './states/LoginReducer';
+import CarReducer from './states/CarReducer';
+import { applyMiddleware  } from 'redux'
 import { Provider } from 'react-redux';
+import axios from 'axios';
 
+let reducers = combineReducers({
+  login:LoginReducer,
+  cars: CarReducer
+})
+
+const logger = store => next => action => {
+  console.group(action.type)
+  console.info('dispatching', action)
+  let result = next(action)
+  console.log('next state', store.getState())
+  console.groupEnd()
+  return result
+}
 
 const store = createStore(
-  LoginReducer,
-  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
+  reducers,
+  // compose(
+  applyMiddleware(logger),
+  // window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()));
+);
+
+axios.defaults.baseURL = 'http://localhost:5000'
+axios.interceptors.request.use(function (config) {
+  const token = store.getState().login.token;
+  config.headers.Authorization =  token;
+  return config;
+});
 
 ReactDOM.render(
   <Provider store={store}>

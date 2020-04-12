@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { Grid } from '@material-ui/core';
-import { useSelector, useDispatch } from 'react-redux';
+// import { useSelector, useDispatch } from 'react-redux';
 
 import {
   AdStatus,
@@ -19,14 +19,6 @@ const useStyles = makeStyles(theme => ({
 
 const Dashboard = () => {
   const classes = useStyles();
-  let loggedIn = useSelector(state=>state.loggedIn);
-  let dispatch = useDispatch();
-
-  useEffect(()=>{
-    if(!loggedIn){
-      dispatch({type:'logout'})
-    }
-  },[loggedIn, dispatch])
 
   return (
     <div className={classes.root}>

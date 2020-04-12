@@ -13,7 +13,8 @@ import {
   Settings as SettingsView,
   SignUp as SignUpView,
   SignIn as SignInView,
-  NotFound as NotFoundView
+  NotFound as NotFoundView,
+  MyCars as MyCarsView
 } from './views';
 
 import { useDispatch } from 'react-redux'
@@ -53,12 +54,12 @@ const Routes = () => {
         layout={MainLayout}
         path="/products"
       />
-      {/* <RouteWithLayout
-        component={TypographyView}
+      <RouteWithLayout
+        component={MyCarsView}
         exact
         layout={MainLayout}
-        path="/typography"
-      /> */}
+        path="/my-cars"
+      />
       {/* <RouteWithLayout
         component={IconsView}
         exact

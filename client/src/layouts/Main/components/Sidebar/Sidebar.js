@@ -6,9 +6,10 @@ import { Divider, Drawer } from '@material-ui/core';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import PeopleIcon from '@material-ui/icons/People';
 import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket';
+import DriveEta from '@material-ui/icons/DriveEta';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import SettingsIcon from '@material-ui/icons/Settings';
-import LockOpenIcon from '@material-ui/icons/LockOpen';
+import AdsIcon from './AdsIcon'
 
 import { Profile, SidebarNav } from './components';
 
@@ -56,11 +57,16 @@ const Sidebar = props => {
       href: '/products',
       icon: <ShoppingBasketIcon />
     },
-    // {
-    //   title: 'Authentication',
-    //   href: '/sign-in',
-    //   icon: <LockOpenIcon />
-    // },
+    {
+      title: 'My Ads',
+      href: '/my-ads',
+      icon: <AdsIcon />
+    },
+    {
+      title: 'My Cars',
+      href: '/my-cars',
+      icon: <DriveEta />
+    },
     {
       title: 'Account',
       href: '/account',

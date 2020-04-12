@@ -127,7 +127,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const SignIn = props => {
-  const state = useSelector(state => state);
+  const state = useSelector(state => state.login);
   let dispatch = useDispatch();
   const [errors, setErrors] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -154,6 +154,7 @@ const SignIn = props => {
 
   useEffect(()=>{
     let token =localStorage.getItem('_carobar_');
+    // console.log(state);
     if(state.loggedIn || token){
       dispatch({ type: 'localState' , payload: {token, user:jwt_decode(token)}});
       history.push('/dashboard')
@@ -169,7 +170,7 @@ const SignIn = props => {
         }
         );
         if(response){
-          // console.log(response.data);
+          console.log(response.data);
           const { token } = response.data;
           localStorage.setItem('_carobar_', token);
           dispatch({ type: 'login' , payload: {token, user:jwt_decode(token)}});
