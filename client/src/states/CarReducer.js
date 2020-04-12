@@ -18,6 +18,10 @@ function reducer(state = {cars:[]}, action){
         ...state,
         cars: state.cars.filter(car=>car['_id']!==action.payload)
       }
+    case 'logout':
+      return {
+        cars: {}
+      }
     default:
       return state;
   }

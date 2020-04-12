@@ -7,7 +7,6 @@ import DashboardIcon from '@material-ui/icons/Dashboard';
 import PeopleIcon from '@material-ui/icons/People';
 import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket';
 import DriveEta from '@material-ui/icons/DriveEta';
-import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import SettingsIcon from '@material-ui/icons/Settings';
 import AdsIcon from './AdsIcon'
 
@@ -70,11 +69,6 @@ const Sidebar = props => {
     {
       title: 'Account',
       href: '/account',
-      icon: <AccountBoxIcon />
-    },
-    {
-      title: 'Settings',
-      href: '/settings',
       icon: <SettingsIcon />
     }
   ];

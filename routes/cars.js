@@ -21,8 +21,8 @@ router.all("*", verifyJWT_MW);
 // User model
 const Cars = require("../models/cars");
 
-// @route   GET /api/cars/:id
-// @desc    Get a specific user
+// @route   Delete /api/cars/:id
+// @desc    Delete a specific users car
 // @access  Public
 router.delete("/:id/:carId", async (req, res) => {
   console.log(req.params)
@@ -38,7 +38,7 @@ router.delete("/:id/:carId", async (req, res) => {
 });
 
 // @route   GET /api/cars/:id
-// @desc    Get a specific user
+// @desc    Get a specific car
 // @access  Public
 router.get("/:id", async (req, res) => {
   console.log(req.params)

@@ -2,7 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { Grid } from '@material-ui/core';
 
-import { AccountProfile, AccountDetails } from './components';
+import { AccountDetails, Password } from './components';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -11,7 +11,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Account = () => {
-  const classes = useStyles();
+  const classes = useStyles();  
 
   return (
     <div className={classes.root}>
@@ -26,7 +26,7 @@ const Account = () => {
           xl={4}
           xs={12}
         >
-          <AccountProfile />
+          <Password/>
         </Grid>
         <Grid
           item

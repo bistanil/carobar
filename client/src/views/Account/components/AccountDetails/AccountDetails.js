@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
@@ -6,12 +6,12 @@ import {
   Card,
   CardHeader,
   CardContent,
-  CardActions,
   Divider,
   Grid,
-  Button,
   TextField
 } from '@material-ui/core';
+import { useSelector } from 'react-redux';
+// import Password from '../Password';
 
 const useStyles = makeStyles(() => ({
   root: {}
@@ -19,186 +19,100 @@ const useStyles = makeStyles(() => ({
 
 const AccountDetails = props => {
   const { className, ...rest } = props;
+  const state = useSelector(state=>state.login);
 
   const classes = useStyles();
 
-  const [values, setValues] = useState({
-    firstName: 'Shen',
-    lastName: 'Zhi',
-    email: 'shen.zhi@devias.io',
-    phone: '',
-    state: 'Alabama',
-    country: 'USA'
-  });
-
-  const handleChange = event => {
-    setValues({
-      ...values,
-      [event.target.name]: event.target.value
-    });
-  };
-
-  const states = [
-    {
-      value: 'alabama',
-      label: 'Alabama'
-    },
-    {
-      value: 'new-york',
-      label: 'New York'
-    },
-    {
-      value: 'san-francisco',
-      label: 'San Francisco'
-    }
-  ];
 
   return (
     <Card
       {...rest}
       className={clsx(classes.root, className)}
     >
-      <form
-        autoComplete="off"
-        noValidate
-      >
-        <CardHeader
-          subheader="The information can be edited"
-          title="Profile"
-        />
-        <Divider />
-        <CardContent>
+      <CardHeader
+        subheader="The information cannot be edited"
+        title="Profile"
+      />
+      <Divider />
+      <CardContent>
+        <Grid
+          container
+          spacing={2}
+        >
           <Grid
-            container
-            spacing={3}
+            item
+            md={6}
+            xs={12}
           >
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                helperText="Please specify the first name"
-                label="First name"
-                margin="dense"
-                name="firstName"
-                onChange={handleChange}
-                required
-                value={values.firstName}
-                variant="outlined"
-              />
-            </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                label="Last name"
-                margin="dense"
-                name="lastName"
-                onChange={handleChange}
-                required
-                value={values.lastName}
-                variant="outlined"
-              />
-            </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                label="Email Address"
-                margin="dense"
-                name="email"
-                onChange={handleChange}
-                required
-                value={values.email}
-                variant="outlined"
-              />
-            </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                label="Phone Number"
-                margin="dense"
-                name="phone"
-                onChange={handleChange}
-                type="number"
-                value={values.phone}
-                variant="outlined"
-              />
-            </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                label="Select State"
-                margin="dense"
-                name="state"
-                onChange={handleChange}
-                required
-                select
-                // eslint-disable-next-line react/jsx-sort-props
-                SelectProps={{ native: true }}
-                value={values.state}
-                variant="outlined"
-              >
-                {states.map(option => (
-                  <option
-                    key={option.value}
-                    value={option.value}
-                  >
-                    {option.label}
-                  </option>
-                ))}
-              </TextField>
-            </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                label="Country"
-                margin="dense"
-                name="country"
-                onChange={handleChange}
-                required
-                value={values.country}
-                variant="outlined"
-              />
-            </Grid>
+            <TextField
+              disabled
+              fullWidth                
+              label="First name"
+              margin="dense"
+              name="first_name"
+              required
+              value={state.user.first_name}
+              variant="outlined"
+            />
           </Grid>
-        </CardContent>
-        <Divider />
-        <CardActions>
-          <Button
-            color="primary"
-            variant="contained"
+          <Grid
+            item
+            md={6}
+            xs={12}
           >
-            Save details
-          </Button>
-        </CardActions>
-      </form>
+            <TextField
+              disabled
+              fullWidth
+              label="Last name"
+              margin="dense"
+              name="last_name"
+              required
+              value={state.user.last_name}
+              variant="outlined"
+            />
+          </Grid>
+          <Grid
+            item
+            md={6}
+            xs={12}
+          >
+            <TextField
+              disabled
+              fullWidth
+              label="Email Address"
+              margin="dense"
+              name="email"
+              required
+              value={state.user.email}
+              variant="outlined"
+            />
+          </Grid>
+          <Grid
+            item
+            md={6}
+            xs={12}
+          >
+            <TextField
+              disabled
+              fullWidth
+              label="Phone Number"
+              margin="dense"
+              name="phone"
+              type="number"
+              value={state.user.phone}
+              variant="outlined"
+            />
+          </Grid>
+        </Grid>
+      </CardContent>
+      {/* <Password/> */}
     </Card>
   );
 };
 
 AccountDetails.propTypes = {
-  className: PropTypes.string
+  className: PropTypes.string,
+  userDetails: PropTypes.object
 };
 
 export default AccountDetails;

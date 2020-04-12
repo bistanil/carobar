@@ -23,14 +23,14 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Profile = props => {
-  let userData = useSelector(state=>state.user);
+  let state = useSelector(state=>state.login);
   const { className, ...rest } = props;
 
   const classes = useStyles();
   const user = {
-    name: userData?userData['first_name']:'Naseem',
-    avatar: '/images/avatars/avatar_11.png',
-    bio: userData?userData['user_type']:'User'
+    name: state.user['first_name'],
+    avatar: '/images/avatars/avatar_3.png',
+    bio: state.user['user_type']
   };
 
   return (
@@ -51,7 +51,7 @@ const Profile = props => {
       >
         {user.name}
       </Typography>
-      <Typography variant="body2">{user.bio}</Typography>
+      <Typography variant="overline">{user.bio}</Typography>
     </div>
   );
 };

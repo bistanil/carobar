@@ -47,6 +47,7 @@ const CarsTable = props => {
   const { className, tableData, setToDelete, isDeleting, ...rest } = props;  
   const columns = [
     {
+      label:'Image',
       name:'image',
       options: {
         filter: true,
